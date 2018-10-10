@@ -5,12 +5,12 @@ import time
 import logging
 import platform
 import torch
-from core.dataset import CUB, Car2000
+from core.dataset import CUB
 
 import sys
 sys.path.append('.')
 
-from config import DATASET_PATH, BATCH_SIZE, dataloader_num_workers
+from config import dataset_path, BATCH_SIZE, NUM_WORKERS
 
 __all__ = ['progress_bar', 'format_time', 'init_log', 'test_cuda', 'test_cudnn']
 

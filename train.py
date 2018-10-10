@@ -16,13 +16,13 @@ from data.awe_dataset import AWEDataset
 
 data_transforms = {
     "train": transforms.Compose([
-        transforms.Resize((224, 224)),
+        transforms.Resize((448, 448)),
         transforms.RandomHorizontalFlip(),
         transforms.ToTensor(),
         transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
     ]),
     "val": transforms.Compose([
-        transforms.Resize((224, 224)),
+        transforms.Resize((448, 448)),
         transforms.ToTensor(),
         transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
     ]),
@@ -30,8 +30,8 @@ data_transforms = {
 
 
 def read_own_dataloader():
-    awe_data_train = AWEDataset("AWE_dataset", train=True, transform=data_transforms["train"])
-    awe_data_val = AWEDataset("AWE_dataset", train=False, transform=data_transforms["val"])
+    awe_data_train = AWEDataset("data/AWE_dataset", train=True, transform=data_transforms["train"])
+    awe_data_val = AWEDataset("data/AWE_dataset", train=False, transform=data_transforms["val"])
     dataloaders = {"train": DataLoader(awe_data_train, batch_size=16, shuffle=True, num_workers=2),
                    "val": DataLoader(awe_data_val, batch_size=16, shuffle=False, num_workers=2)}
 
