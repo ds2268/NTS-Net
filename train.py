@@ -4,21 +4,39 @@ from datetime import datetime
 import torch.utils.data
 from torch.nn import DataParallel
 from torch.optim.lr_scheduler import MultiStepLR
+from torchvision import transforms
+from torch.utils.data import DataLoader
 
 from config import (BATCH_SIZE, dataset_path, LR, PROPOSAL_NUM, SAVE_FREQ, WD,
                     NUM_WORKERS, OWN_DATASET, resume, save_dir)
 from core import dataset, model
 from core.utils import init_log, progress_bar
+from data.awe_dataset import AWEDataset
+
+
+data_transforms = {
+    "train": transforms.Compose([
+        transforms.Resize((224, 224)),
+        transforms.RandomHorizontalFlip(),
+        transforms.ToTensor(),
+        transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
+    ]),
+    "val": transforms.Compose([
+        transforms.Resize((224, 224)),
+        transforms.ToTensor(),
+        transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
+    ]),
+}
 
 
 def read_own_dataloader():
-    trainset = dataset.OwnDataset(root_path=dataset_path, label_path='data', is_train=True, data_len=None)
-    trainloader = torch.utils.data.DataLoader(trainset, batch_size=BATCH_SIZE,
-                                            shuffle=True, num_workers=NUM_WORKERS, drop_last=False)
-    testset = dataset.OwnDataset(root_path=dataset_path, label_path= 'data', is_train=False, data_len=None)
-    testloader = torch.utils.data.DataLoader(testset, batch_size=BATCH_SIZE,
-                                            shuffle=False, num_workers=NUM_WORKERS, drop_last=False)
-    return trainloader, testloader
+    awe_data_train = AWEDataset("AWE_dataset", train=True, transform=data_transforms["train"])
+    awe_data_val = AWEDataset("AWE_dataset", train=False, transform=data_transforms["val"])
+    dataloaders = {"train": DataLoader(awe_data_train, batch_size=16, shuffle=True, num_workers=2),
+                   "val": DataLoader(awe_data_val, batch_size=16, shuffle=False, num_workers=2)}
+
+    return dataloaders["train"], dataloaders["val"]
+
 
 if __name__ == '__main__':
     os.environ['CUDA_VISIBLE_DEVICES'] = '0'

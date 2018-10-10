@@ -87,7 +87,7 @@ class OwnDataset():
         self.label_path = label_path
         self.is_train = is_train
 
-        X_train, y_train, X_test, y_test = self.read_txt()        
+        X_train, y_train, X_test, y_test = self.read_txt()
         if self.is_train:
             self.train_image_paths = [os.path.join(self.root, train_file) for train_file in
                               X_train[:data_len]]
@@ -140,7 +140,7 @@ class OwnDataset():
 
 if __name__ == '__main__':
     # test on CUB dataset
-    dataset = CUB(root='./CUB_200_2011')
+    """dataset = CUB(root='./CUB_200_2011')
     print(len(dataset.train_img))
     print(len(dataset.train_label))
     for data in dataset:
@@ -149,19 +149,17 @@ if __name__ == '__main__':
     print(len(dataset.test_img))
     print(len(dataset.test_label))
     for data in dataset:
-        print(data[0].size(), data[1])
+        print(data[0].size(), data[1])"""
     
     # test on your own dataset
-    dataset = OwnDataset(root_path='path/to/dataset', label_path='data',is_train=True)
+    dataset = OwnDataset(root_path='../data/', label_path='../data', is_train=True)
     print(len(dataset.train_image_paths))
     print(len(dataset.train_label))
     for data in dataset:
         print(data[0].size(), data[1])
-    dataset = OwnDataset(root_path='path/to/dataset', label_path='data',is_train=False)
+    dataset = OwnDataset(root_path='../data/', label_path='../data', is_train=False)
     print(len(dataset.test_image_paths))
     print(len(dataset.test_label))
     for data in dataset:
         print(data[0].size(), data[1])
-    
-    
-    
+
